@@ -1,8 +1,11 @@
+import { useEffect } from "react";
+import { getTimetable } from "../api/axios";
 
 const DashboardPage = () => {
-  return (
-    <div>DashboardPage</div>
-  )
-}
+  useEffect(() => {
+    getTimetable().then((data) => console.log(data));
+  }, []);
+  return <div>DashboardPage</div>;
+};
 
-export default DashboardPage
+export default DashboardPage;
