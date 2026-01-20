@@ -4,7 +4,7 @@ import { Box, CssBaseline, Toolbar } from "@mui/material";
 import Header from "../components/Header";
 import { useAuth } from "../context/AuthContext";
 
-const drawerWidth = 240;
+// const drawerWidth = 240;
 
 const LandingPage: React.FC = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -12,9 +12,9 @@ const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  // const handleDrawerToggle = () => {
+  //   setMobileOpen(!mobileOpen);
+  // };
 
   const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);

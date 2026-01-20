@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import "./GroupSchedulePage.css";
 
 interface Schedule {
@@ -35,16 +35,16 @@ const days = [
 ];
 
 // Generate hourly intervals from 8:00 to 18:00
-const times = Array.from({ length: 11 }).map((_, i) => {
-  const hour = 8 + i;
-  return `${String(hour).padStart(2, "0")}:00`;
-});
+// const times = Array.from({ length: 11 }).map((_, i) => {
+//   const hour = 8 + i;
+//   return `${String(hour).padStart(2, "0")}:00`;
+// });
 
 // Helper function to convert time string to minutes
-const timeToMinutes = (time: string): number => {
-  const [hour, minute] = time.split(":").map(Number);
-  return hour * 60 + minute;
-};
+// const timeToMinutes = (time: string): number => {
+//   const [hour, minute] = time.split(":").map(Number);
+//   return hour * 60 + minute;
+// };
 
 const GroupSchedulePage: React.FC = () => {
   const { groupId } = useParams<{ groupId: string }>();
@@ -70,6 +70,7 @@ const GroupSchedulePage: React.FC = () => {
     if (groupId) {
       fetchGroupAndSchedules();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupId]);
 
   const fetchGroupAndSchedules = async () => {

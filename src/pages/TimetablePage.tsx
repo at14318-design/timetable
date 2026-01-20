@@ -167,6 +167,7 @@ const TimetablePage: React.FC = () => {
   // Fetch timetable events on mount
   useEffect(() => {
     fetchTimetable();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchTimetable = async () => {
