@@ -78,12 +78,15 @@ const GroupSchedulePage: React.FC = () => {
       setLoading(true);
       setError("");
       const [groupRes, schedulesRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/groups/${groupId}`, {
+        axios.get(`${process.env.REACT_APP_API_URL}/api/groups/${groupId}`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axios.get(`http://localhost:5000/api/schedules/group/${groupId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
+        axios.get(
+          `${process.env.REACT_APP_API_URL}/api/schedules/group/${groupId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        ),
       ]);
 
       setGroup(groupRes.data);
@@ -116,7 +119,7 @@ const GroupSchedulePage: React.FC = () => {
 
       if (editingId) {
         response = await axios.put(
-          `http://localhost:5000/api/schedules/${editingId}`,
+          `${process.env.REACT_APP_API_URL}/api/schedules/${editingId}`,
           {
             ...formData,
             groupId,
@@ -130,7 +133,7 @@ const GroupSchedulePage: React.FC = () => {
         );
       } else {
         response = await axios.post(
-          "http://localhost:5000/api/schedules",
+          `${process.env.REACT_APP_API_URL}/api/schedules`,
           {
             ...formData,
             groupId,
@@ -175,9 +178,12 @@ const GroupSchedulePage: React.FC = () => {
 
     try {
       setError("");
-      await axios.delete(`http://localhost:5000/api/schedules/${scheduleId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/schedules/${scheduleId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       setSchedules(schedules.filter((s) => s._id !== scheduleId));
     } catch (err: any) {

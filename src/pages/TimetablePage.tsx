@@ -175,7 +175,7 @@ const TimetablePage: React.FC = () => {
       setLoading(true);
       setError("");
       const response = await axios.get(
-        `http://localhost:5000/api/timetable/${userId}`,
+        `${process.env.REACT_APP_API_URL}/api/timetable/${userId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -238,7 +238,7 @@ const TimetablePage: React.FC = () => {
       if (editingId) {
         // Update existing event
         const response = await axios.put(
-          `http://localhost:5000/api/timetable/${editingId}`,
+          `${process.env.REACT_APP_API_URL}/api/timetable/${editingId}`,
           {
             subject: form.subject,
             day: form.day,
@@ -253,7 +253,7 @@ const TimetablePage: React.FC = () => {
       } else {
         // Create new event
         const response = await axios.post(
-          "http://localhost:5000/api/timetable",
+          `${process.env.REACT_APP_API_URL}/api/timetable`,
           {
             subject: form.subject,
             day: form.day,
@@ -291,9 +291,12 @@ const TimetablePage: React.FC = () => {
 
     try {
       setError("");
-      await axios.delete(`http://localhost:5000/api/timetable/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/timetable/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setEvents(events.filter((e) => e._id !== id));
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to delete event");

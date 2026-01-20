@@ -44,9 +44,12 @@ const GroupsManagement: React.FC = () => {
     try {
       setLoading(true);
       setError("");
-      const response = await axios.get("http://localhost:5000/api/groups", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/groups`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setGroups(response.data);
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to fetch groups");
@@ -65,7 +68,7 @@ const GroupsManagement: React.FC = () => {
     try {
       setError("");
       const response = await axios.post(
-        "http://localhost:5000/api/groups",
+        `${process.env.REACT_APP_API_URL}/api/groups`,
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -88,7 +91,7 @@ const GroupsManagement: React.FC = () => {
     try {
       setError("");
       const response = await axios.post(
-        `http://localhost:5000/api/groups/${groupId}/members`,
+        `${process.env.REACT_APP_API_URL}/api/groups/${groupId}/members`,
         { email: addMemberEmail },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -107,7 +110,7 @@ const GroupsManagement: React.FC = () => {
     try {
       setError("");
       const response = await axios.delete(
-        `http://localhost:5000/api/groups/${groupId}/members/${memberId}`,
+        `${process.env.REACT_APP_API_URL}/api/groups/${groupId}/members/${memberId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -127,9 +130,12 @@ const GroupsManagement: React.FC = () => {
 
     try {
       setError("");
-      await axios.delete(`http://localhost:5000/api/groups/${groupId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/groups/${groupId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       setGroups(groups.filter((g) => g._id !== groupId));
       setSelectedGroup(null);
