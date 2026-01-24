@@ -95,7 +95,6 @@ const TimetablePage: React.FC = () => {
 
   const token = localStorage.getItem("authToken");
   const userId = localStorage.getItem("userId");
-  const userRole = localStorage.getItem("userRole");
 
   const eventsByCell = useMemo(() => {
     const map: Record<string, { event: EventItem; rowSpan: number }> = {};
