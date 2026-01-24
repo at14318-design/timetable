@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   FormControl,
   InputLabel,
@@ -63,7 +64,7 @@ const timesOverlap = (
   start1: string,
   end1: string,
   start2: string,
-  end2: string
+  end2: string,
 ): boolean => {
   const s1 = timeToMinutes(start1);
   const e1 = timeToMinutes(end1);
@@ -85,6 +86,8 @@ const TimetablePage: React.FC = () => {
     endTime: "09:00",
     subject: "",
   });
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState<string | null>(null);
 
   const token = localStorage.getItem("authToken");
   const userId = localStorage.getItem("userId");
@@ -178,7 +181,7 @@ const TimetablePage: React.FC = () => {
         `${process.env.REACT_APP_API_URL}/api/timetable/${userId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
       setEvents(response.data);
     } catch (err: any) {
@@ -222,12 +225,12 @@ const TimetablePage: React.FC = () => {
       const conflictingEvent = events.find(
         (e) =>
           e.day === form.day &&
-          timesOverlap(e.startTime, e.endTime, form.startTime!, form.endTime!)
+          timesOverlap(e.startTime, e.endTime, form.startTime!, form.endTime!),
       );
 
       if (conflictingEvent) {
         setError(
-          `A conflict exists with "${conflictingEvent.subject}" at ${conflictingEvent.startTime}-${conflictingEvent.endTime}`
+          `A conflict exists with "${conflictingEvent.subject}" at ${conflictingEvent.startTime}-${conflictingEvent.endTime}`,
         );
         return;
       }
@@ -247,7 +250,7 @@ const TimetablePage: React.FC = () => {
           },
           {
             headers: { Authorization: `Bearer ${token}` },
-          }
+          },
         );
         setEvents(events.map((e) => (e._id === editingId ? response.data : e)));
       } else {
@@ -263,7 +266,7 @@ const TimetablePage: React.FC = () => {
           },
           {
             headers: { Authorization: `Bearer ${token}` },
-          }
+          },
         );
         setEvents([...events, response.data]);
       }
@@ -284,23 +287,27 @@ const TimetablePage: React.FC = () => {
     setOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this event?")) {
-      return;
-    }
+  const handleDelete = (id: string) => {
+    setEventToDelete(id);
+    setDeleteDialogOpen(true);
+  };
 
+  const handleConfirmDelete = async () => {
+    if (!eventToDelete) return;
     try {
       setError("");
       await axios.delete(
-        `${process.env.REACT_APP_API_URL}/api/timetable/${id}`,
+        `${process.env.REACT_APP_API_URL}/api/timetable/${eventToDelete}`,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
-      setEvents(events.filter((e) => e._id !== id));
+      setEvents(events.filter((e) => e._id !== eventToDelete));
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to delete event");
     }
+    setDeleteDialogOpen(false);
+    setEventToDelete(null);
   };
 
   return (
@@ -410,23 +417,21 @@ const TimetablePage: React.FC = () => {
                               >
                                 Edit
                               </Button>
-                              {userRole !== "student" && (
-                                <Button
-                                  size="small"
-                                  color="error"
-                                  variant="outlined"
-                                  sx={{
-                                    fontSize: "0.65rem",
-                                    padding: "2px 4px",
-                                  }}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDelete(eventData.event._id || "");
-                                  }}
-                                >
-                                  Delete
-                                </Button>
-                              )}
+                              <Button
+                                size="small"
+                                color="error"
+                                variant="contained"
+                                sx={{
+                                  fontSize: "0.65rem",
+                                  padding: "2px 4px",
+                                }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDelete(eventData.event._id || "");
+                                }}
+                              >
+                                Delete
+                              </Button>
                             </Box>
                           </Paper>
                         </TableCell>
@@ -506,6 +511,24 @@ const TimetablePage: React.FC = () => {
           <Button onClick={handleClose}>Cancel</Button>
           <Button variant="contained" onClick={handleAdd}>
             {editingId ? "Update" : "Save"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this event?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleConfirmDelete} variant="contained" autoFocus>
+            Confirm
           </Button>
         </DialogActions>
       </Dialog>

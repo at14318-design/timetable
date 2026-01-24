@@ -17,6 +17,7 @@
     "@types/react-dom": "^19.2.3",
     "axios": "^1.13.2",
     "react": "^19.2.3",
+    "react-chatbot-kit": "^2.2.2",
     "react-dom": "^19.2.3",
     "react-router-dom": "^7.11.0",
     "react-scripts": "5.0.1",

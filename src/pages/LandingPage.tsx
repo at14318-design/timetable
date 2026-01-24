@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Box, CssBaseline, Toolbar } from "@mui/material";
 import Header from "../components/Header";
 import { useAuth } from "../context/AuthContext";
+import ChatWidget from "../components/ChatWidget";
 
 // const drawerWidth = 240;
 
@@ -50,6 +51,7 @@ const LandingPage: React.FC = () => {
         <Toolbar />
         <Outlet />
       </Box>
+      <ChatWidget />
     </Box>
   );
 };

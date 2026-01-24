@@ -50,6 +50,8 @@ const LoginPage: React.FC = () => {
       }
     } catch (err: any) {
       setError(err.response?.data?.message || "Invalid email or password");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -126,7 +128,7 @@ const LoginPage: React.FC = () => {
               component="span"
               variant="body2"
               sx={{ cursor: "pointer", color: "primary.main", fontWeight: 600 }}
-              onClick={() => console.log("Navigate to signup")}
+              onClick={() => navigate("/register")}
             >
               Sign Up
             </Typography>

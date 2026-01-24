@@ -9,8 +9,11 @@ import {
   Typography,
   Button,
   IconButton,
+  useColorScheme,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 
 type Props = {
   anchorEl: HTMLElement | null;
@@ -29,6 +32,7 @@ const Header: React.FC<Props> = ({
 }) => {
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
+  const { mode, setMode, systemMode } = useColorScheme();
 
   return (
     <AppBar
@@ -61,6 +65,20 @@ const Header: React.FC<Props> = ({
         </Box>
 
         <Box>
+          <IconButton
+            sx={{ ml: 1 }}
+            onClick={() => {
+              const currentMode = mode === "system" ? systemMode : mode;
+              setMode(currentMode === "dark" ? "light" : "dark");
+            }}
+            color="inherit"
+          >
+            {mode === "dark" || (mode === "system" && systemMode === "dark") ? (
+              <Brightness7Icon />
+            ) : (
+              <Brightness4Icon />
+            )}
+          </IconButton>
           <IconButton
             color="inherit"
             onClick={onAvatarClick}
