@@ -49,17 +49,11 @@ const Header: React.FC<Props> = ({
           </Box>
 
           <Box sx={{ display: "flex", gap: 1 }}>
-            <Button color="inherit" onClick={() => navigate("/")}>
-              Dashboard
-            </Button>
             <Button color="inherit" onClick={() => navigate("/timetable")}>
               Timetable
             </Button>
             <Button color="inherit" onClick={() => navigate("/groups")}>
               Groups
-            </Button>
-            <Button color="inherit" onClick={() => navigate("/courses")}>
-              Courses
             </Button>
           </Box>
         </Box>

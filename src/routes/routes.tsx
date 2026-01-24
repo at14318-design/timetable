@@ -1,4 +1,4 @@
-import { JSX } from "react";
+import { createBrowserRouter } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
 import GroupSchedulePage from "../pages/GroupSchedulePage";
 import GroupsManagement from "../pages/GroupsManagement";
@@ -8,13 +8,7 @@ import RegisterPage from "../pages/RegisterPage";
 import SettingsPage from "../pages/SettingsPage";
 import TimetablePage from "../pages/TimetablePage";
 
-interface RouteType {
-  path: string;
-  element: JSX.Element;
-  children?: RouteType[];
-}
-
-export const routes: RouteType[] = [
+export const routes = createBrowserRouter([
   {
     path: "/",
     element: (
@@ -23,6 +17,10 @@ export const routes: RouteType[] = [
       </ProtectedRoute>
     ),
     children: [
+      {
+        index: true,
+        element: <TimetablePage />,
+      },
       {
         path: "timetable",
         element: <TimetablePage />,
@@ -49,4 +47,4 @@ export const routes: RouteType[] = [
     path: "register",
     element: <RegisterPage />,
   },
-];
+]);

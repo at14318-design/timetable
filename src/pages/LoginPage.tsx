@@ -2,81 +2,71 @@ import React, { useState } from "react";
 import {
   Box,
   Button,
-  Card,
   Container,
   TextField,
   Typography,
+  Paper,
   Alert,
+  Link,
   CircularProgress,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import api from "../api/axios";
+import axios from "axios";
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { login } = useAuth();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-
-    if (!email || !password) {
-      setError("Please fill in all fields");
-      return;
-    }
-
-    setLoading(true);
     try {
-      // Call backend login endpoint
-      const response = await api.post("/auth/login", { email, password });
-      const { token, user } = response.data;
+      setError("");
+      setLoading(true);
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/auth/login`,
+        {
+          email: formData.email,
+          password: formData.password,
+        },
+      );
 
-      if (token) {
-        login(token);
-        // Store userId for later use
-        localStorage.setItem("userId", user.id);
-        // Store user role for client-side UI decisions (e.g., hide delete for students)
-        if (user.role) {
-          localStorage.setItem("userRole", user.role);
-        }
-        navigate("/");
-      } else {
-        setError("No token received from server");
+      const { token, user } = response.data;
+      localStorage.setItem("authToken", token);
+      localStorage.setItem("userId", user.id);
+      if (user.role) {
+        localStorage.setItem("userRole", user.role);
       }
+
+      // Redirect to home page
+      window.location.href = "/";
     } catch (err: any) {
-      setError(err.response?.data?.message || "Invalid email or password");
+      setError(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="xs">
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
+          justifyContent: "center",
           minHeight: "100vh",
         }}
       >
-        <Card sx={{ p: 4, width: "100%" }}>
-          <Typography variant="h4" align="center" sx={{ mb: 1 }}>
-            School Name
-          </Typography>
-          <Typography
-            variant="body2"
-            align="center"
-            color="textSecondary"
-            sx={{ mb: 3 }}
-          >
-            Login to your account
+        <Paper elevation={3} sx={{ p: 4, width: "100%" }}>
+          <Typography component="h1" variant="h5" align="center" gutterBottom>
+            Sign In
           </Typography>
 
           {error && (
@@ -85,55 +75,47 @@ const LoginPage: React.FC = () => {
             </Alert>
           )}
 
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{ display: "grid", gap: 2 }}
-          >
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              margin="normal"
+              required
               fullWidth
-              placeholder="Enter your email"
-              disabled={loading}
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={formData.email}
+              onChange={handleChange}
             />
-
             <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
               label="Password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              fullWidth
-              placeholder="Enter your password"
-              disabled={loading}
+              id="password"
+              autoComplete="current-password"
+              value={formData.password}
+              onChange={handleChange}
             />
-
             <Button
               type="submit"
-              variant="contained"
               fullWidth
-              size="large"
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
               disabled={loading}
-              sx={{ mt: 1 }}
             >
               {loading ? <CircularProgress size={24} /> : "Sign In"}
             </Button>
+            <Box sx={{ textAlign: "center" }}>
+              <Link href="/register" variant="body2">
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Box>
           </Box>
-
-          <Typography variant="body2" align="center" sx={{ mt: 2 }}>
-            Don't have an account?{" "}
-            <Typography
-              component="span"
-              variant="body2"
-              sx={{ cursor: "pointer", color: "primary.main", fontWeight: 600 }}
-              onClick={() => navigate("/register")}
-            >
-              Sign Up
-            </Typography>
-          </Typography>
-        </Card>
+        </Paper>
       </Box>
     </Container>
   );

@@ -23,6 +23,8 @@ import {
   Typography,
   Alert,
   CircularProgress,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import axios from "axios";
 
@@ -32,6 +34,7 @@ type EventItem = {
   startTime: string;
   endTime: string;
   subject: string;
+  reminder?: boolean;
 };
 
 const days = [
@@ -85,6 +88,7 @@ const TimetablePage: React.FC = () => {
     startTime: "08:00",
     endTime: "09:00",
     subject: "",
+    reminder: false,
   });
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState<string | null>(null);
@@ -198,6 +202,7 @@ const TimetablePage: React.FC = () => {
       startTime: "08:00",
       endTime: "09:00",
       subject: "",
+      reminder: false,
     });
     setOpen(true);
   };
@@ -247,6 +252,7 @@ const TimetablePage: React.FC = () => {
             day: form.day,
             startTime: form.startTime,
             endTime: form.endTime,
+            reminder: form.reminder,
           },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -263,6 +269,7 @@ const TimetablePage: React.FC = () => {
             startTime: form.startTime,
             endTime: form.endTime,
             userId,
+            reminder: form.reminder,
           },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -283,6 +290,7 @@ const TimetablePage: React.FC = () => {
       startTime: event.startTime,
       endTime: event.endTime,
       subject: event.subject,
+      reminder: event.reminder || false,
     });
     setOpen(true);
   };
@@ -505,6 +513,18 @@ const TimetablePage: React.FC = () => {
                 InputLabelProps={{ shrink: true }}
               />
             </Box>
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={!!form.reminder}
+                  onChange={(e) =>
+                    setForm((s) => ({ ...s, reminder: e.target.checked }))
+                  }
+                />
+              }
+              label="Email Reminder (5 min before)"
+            />
           </Box>
         </DialogContent>
         <DialogActions>
