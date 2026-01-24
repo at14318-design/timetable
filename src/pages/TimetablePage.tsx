@@ -523,7 +523,7 @@ const TimetablePage: React.FC = () => {
                   }
                 />
               }
-              label="Email Reminder (5 min before)"
+              label="Email Reminder (15 min before)"
             />
           </Box>
         </DialogContent>
