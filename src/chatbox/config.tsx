@@ -1,21 +1,25 @@
 import { createChatBotMessage } from "react-chatbot-kit";
+import ChatOptions from "../components/ChatOptions";
 
 const config = {
+  botName: "TimetableBot",
   initialMessages: [
     createChatBotMessage(
-      "Hello! I'm your AI assistant. How can I help you with your timetable?",
-      {}
+      "Hello! How can I help you with your schedule today?",
+      {
+        widget: "chatOptions", // Display options immediately on load
+      },
     ),
   ],
-  botName: "Timetable AI",
-  customStyles: {
-    botMessageBox: {
-      backgroundColor: "#1976d2", // Matches MUI primary color
+  widgets: [
+    {
+      widgetName: "chatOptions",
+      widgetFunc: (props: any) => <ChatOptions {...props} />,
+      props: {},
+      mapStateToProps: [],
     },
-    chatButton: {
-      backgroundColor: "#1976d2",
-    },
-  },
+  ],
+  // ... other config
 };
 
 export default config;
